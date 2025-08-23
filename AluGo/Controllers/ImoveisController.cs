@@ -16,7 +16,7 @@ namespace AluGo.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Imovel>>> Get([FromQuery] bool? ativo)
+        public async Task<ActionResult<IEnumerable<Imovel>>> Get([FromQuery] bool? ativo = true)
         {
             var q = _db.Imoveis.AsQueryable();
             if (ativo.HasValue) q = q.Where(x => x.Ativo == ativo);

@@ -1,7 +1,6 @@
 ﻿using AluGo.Data;
 using AluGo.Domain;
 using AluGo.Dtos;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
