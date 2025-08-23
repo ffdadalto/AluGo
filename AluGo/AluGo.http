@@ -1,0 +1,6 @@
+@AluGo_HostAddress = http://localhost:5263
+
+GET {{AluGo_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
