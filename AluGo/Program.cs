@@ -1,5 +1,6 @@
 using AluGo.Data;
 using Microsoft.EntityFrameworkCore;
+using QuestPDF.Infrastructure;
 
 namespace AluGo
 {
@@ -7,6 +8,8 @@ namespace AluGo
     {
         public static async Task Main(string[] args)
         {
+            QuestPDF.Settings.License = LicenseType.Community;
+
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddDbContext<AluGoDbContext>(opt =>

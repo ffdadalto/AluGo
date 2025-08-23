@@ -20,15 +20,19 @@ namespace AluGo.Controllers
         public async Task<ActionResult<IEnumerable<object>>> Get([FromQuery] Guid? contratoId, [FromQuery] StatusParcela? status, [FromQuery] DateTime? vencimentoDe, [FromQuery] DateTime? vencimentoAte)
         {
             var q = _db.Parcelas
-            .Include(p => p.Contrato).ThenInclude(c => c.Imovel)
-            .Include(p => p.Contrato).ThenInclude(c => c.Locatario)
-            .AsQueryable();
+                    .Include(p => p.Contrato).ThenInclude(c => c.Imovel)
+                    .Include(p => p.Contrato).ThenInclude(c => c.Locatario)
+                    .AsQueryable();
 
 
-            if (contratoId.HasValue) q = q.Where(p => p.ContratoId == contratoId);
-            if (status.HasValue) q = q.Where(p => p.Status == status);
-            if (vencimentoDe.HasValue) q = q.Where(p => p.DataVencimento >= vencimentoDe.Value.Date);
-            if (vencimentoAte.HasValue) q = q.Where(p => p.DataVencimento < vencimentoAte.Value.Date.AddDays(1));
+            if (contratoId.HasValue)
+                q = q.Where(p => p.ContratoId == contratoId);
+            if (status.HasValue) 
+                q = q.Where(p => p.Status == status);
+            if (vencimentoDe.HasValue) 
+                q = q.Where(p => p.DataVencimento >= vencimentoDe.Value.Date);
+            if (vencimentoAte.HasValue) 
+                q = q.Where(p => p.DataVencimento < vencimentoAte.Value.Date.AddDays(1));
 
 
             var list = await q.OrderBy(p => p.DataVencimento).Select(p => new {
@@ -44,6 +48,7 @@ namespace AluGo.Controllers
                 p.Status,
                 Contrato = new { p.Contrato.Id, p.Contrato.Imovel.Apelido, p.Contrato.Locatario.Nome }
             }).ToListAsync();
+
             return Ok(list);
         }
 
