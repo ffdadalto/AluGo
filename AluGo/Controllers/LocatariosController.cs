@@ -28,7 +28,7 @@ namespace AluGo.Controllers
         public async Task<ActionResult<Locatario>> Create(LocatarioCreateDto dto)
         {
             var l = new Locatario { 
-                Nome = dto.Nome, Documento = dto.Documento, 
+                Nome = dto.Nome, CPF = dto.CPF, 
                 Email = dto.Email, 
                 Telefone = dto.Telefone, 
                 Endereco = dto.Endereco 
@@ -45,7 +45,7 @@ namespace AluGo.Controllers
         {
             var l = await _db.Locatarios.FindAsync(id);
             if (l is null) return NotFound();
-            (l.Nome, l.Documento, l.Email, l.Telefone, l.Endereco) = (dto.Nome, dto.Documento, dto.Email, dto.Telefone, dto.Endereco);
+            (l.Nome, l.CPF, l.Email, l.Telefone, l.Endereco) = (dto.Nome, dto.CPF, dto.Email, dto.Telefone, dto.Endereco);
             await _db.SaveChangesAsync();
             return NoContent();
         }

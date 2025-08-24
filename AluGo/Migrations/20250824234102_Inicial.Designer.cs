@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AluGo.Migrations
 {
     [DbContext(typeof(AluGoDbContext))]
-    [Migration("20250823002058_Inicial")]
+    [Migration("20250824234102_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -125,12 +125,12 @@ namespace AluGo.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CriadoEm")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Documento")
+                    b.Property<string>("CPF")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CriadoEm")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
@@ -139,6 +139,10 @@ namespace AluGo.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RG")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

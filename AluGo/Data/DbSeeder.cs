@@ -23,7 +23,7 @@ public static class DbSeeder
         var loc = new Locatario
         {
             Nome = "João da Silva",
-            Documento = "000.111.222-33",
+            CPF = "000.111.222-33",
             Email = "joao@email.com",
             Telefone = "(27) 99999-0000",
             Endereco = "Av. Principal, 500"
