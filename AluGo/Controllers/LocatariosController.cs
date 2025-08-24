@@ -27,7 +27,13 @@ namespace AluGo.Controllers
         [HttpPost]
         public async Task<ActionResult<Locatario>> Create(LocatarioCreateDto dto)
         {
-            var l = new Locatario { Nome = dto.Nome, Documento = dto.Documento, Email = dto.Email, Telefone = dto.Telefone, Endereco = dto.Endereco };
+            var l = new Locatario { 
+                Nome = dto.Nome, Documento = dto.Documento, 
+                Email = dto.Email, 
+                Telefone = dto.Telefone, 
+                Endereco = dto.Endereco 
+            };
+
             _db.Locatarios.Add(l);
             await _db.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new { id = l.Id }, l);
