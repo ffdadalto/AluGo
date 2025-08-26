@@ -14,19 +14,13 @@ namespace AluGo.Controllers
         private readonly AluGoDbContext _db;
         public ImoveisController(AluGoDbContext db) => _db = db;
 
-
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Imovel>>> Get([FromQuery] bool? ativo = true)
-        {
-            var q = _db.Imoveis.AsQueryable();
-            if (ativo.HasValue) q = q.Where(x => x.Ativo == ativo);
-            return await q.OrderBy(x => x.Apelido).ToListAsync();
-        }
-
+        public async Task<ActionResult<IEnumerable<Imovel>>> Get()
+            => await _db.Imoveis.OrderBy(x => x.Apelido).ToListAsync();
 
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<Imovel>> GetById(Guid id)
-        => await _db.Imoveis.FindAsync(id) is { } i ? Ok(i) : NotFound();
+            => await _db.Imoveis.FindAsync(id) is { } i ? Ok(i) : NotFound();
 
 
         [HttpPost]

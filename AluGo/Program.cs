@@ -34,8 +34,9 @@ namespace AluGo
             {
                 var db = scope.ServiceProvider.GetRequiredService<AluGoDbContext>();
                 await db.Database.MigrateAsync();
-                await DbSeeder.SeedAsync(db);
-            };  
+                //await DbSeeder.SeedAsync(db);
+            }
+            ;
 
             app.UseHttpsRedirection();
 

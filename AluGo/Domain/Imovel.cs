@@ -9,6 +9,7 @@ namespace AluGo.Domain
         public string Endereco { get; set; } = string.Empty;
         public string Cidade { get; set; } = string.Empty;
         public string UF { get; set; } = "";
+        public TipoImovel Tipo { get; set; } = TipoImovel.Apartamento;
         public bool Ativo { get; set; } = true;
         public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
 
