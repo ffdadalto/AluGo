@@ -104,10 +104,7 @@ namespace AluGo.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<char>("Tipo")
-                        .ValueGeneratedOnAdd()
-                        .IsUnicode(false)
-                        .HasColumnType("char(1)")
-                        .HasDefaultValue('0');
+                        .HasColumnType("nvarchar(1)");
 
                     b.Property<string>("UF")
                         .HasColumnType("nvarchar(max)");
@@ -170,12 +167,8 @@ namespace AluGo.Migrations
                     b.Property<DateTime?>("QuitadaEm")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .IsUnicode(false)
-                        .HasColumnType("char(1)")
-                        .HasDefaultValue("48");
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
 
                     b.Property<decimal>("ValorBase")
                         .HasColumnType("decimal(18,2)");

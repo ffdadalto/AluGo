@@ -15,7 +15,7 @@
         public decimal ValorJuros { get; set; }
         public decimal ValorOutros { get; set; }
         public decimal ValorTotal { get; set; }
-        public StatusParcela Status { get; set; } = StatusParcela.Aberta;
+        public StatusParcela Status { get; set; } = StatusParcela.spAberta;
         public DateTime? QuitadaEm { get; set; }
         public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
 

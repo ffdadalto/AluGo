@@ -9,17 +9,9 @@ namespace AluGo.Data
     {
         public void Configure(EntityTypeBuilder<Parcela> builder)
         {
-            // converter enum <-> char
-            var tipoConverter = new ValueConverter<StatusParcela, char>(
-                v => (char)v,                               // enum -> char
-                v => (StatusParcela)v              // char -> enum
-            );
-
-            builder.Property(p => p.Status)
-                .HasConversion(tipoConverter)
-                .HasColumnType("char(1)")
-                .IsUnicode(false)
-                .HasDefaultValue(StatusParcela.Null);           
+            builder
+                .Property(i => i.Status)
+                .HasConversion(p => (char)p, p => (StatusParcela)(char)p);
         }
     }
 }

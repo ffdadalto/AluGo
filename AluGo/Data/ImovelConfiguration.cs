@@ -1,7 +1,6 @@
 ﻿using AluGo.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AluGo.Data
 {
@@ -9,17 +8,9 @@ namespace AluGo.Data
     {
         public void Configure(EntityTypeBuilder<Imovel> builder)
         {
-            // converter enum <-> char
-            var tipoConverter = new ValueConverter<TipoImovel, char>(
-                v => (char)v,                               // enum -> char
-                v => (TipoImovel)v              // char -> enum
-            );
-
-            builder.Property(p => p.Tipo)
-                .HasConversion(tipoConverter)
-                .HasColumnType("char(1)")
-                .IsUnicode(false)
-                .HasDefaultValue(TipoImovel.Null);           
+            builder
+                .Property(i => i.Tipo)
+                .HasConversion(p => (char)p, p => (TipoImovel)(char)p);
         }
     }
 }

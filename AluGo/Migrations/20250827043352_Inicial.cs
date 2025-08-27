@@ -20,7 +20,7 @@ namespace AluGo.Migrations
                     Endereco = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Cidade = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UF = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Tipo = table.Column<string>(type: "char(1)", unicode: false, nullable: false, defaultValue: "0"),
+                    Tipo = table.Column<string>(type: "nvarchar(1)", nullable: false),
                     Ativo = table.Column<bool>(type: "bit", nullable: false),
                     CriadoEm = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },

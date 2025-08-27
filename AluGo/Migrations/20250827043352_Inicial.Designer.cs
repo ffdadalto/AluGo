@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AluGo.Migrations
 {
     [DbContext(typeof(AluGoDbContext))]
-    [Migration("20250827012417_Inicial-2")]
-    partial class Inicial2
+    [Migration("20250827043352_Inicial")]
+    partial class Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -107,10 +107,7 @@ namespace AluGo.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<char>("Tipo")
-                        .ValueGeneratedOnAdd()
-                        .IsUnicode(false)
-                        .HasColumnType("char(1)")
-                        .HasDefaultValue('0');
+                        .HasColumnType("nvarchar(1)");
 
                     b.Property<string>("UF")
                         .HasColumnType("nvarchar(max)");
@@ -173,12 +170,8 @@ namespace AluGo.Migrations
                     b.Property<DateTime?>("QuitadaEm")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .IsUnicode(false)
-                        .HasColumnType("char(1)")
-                        .HasDefaultValue("48");
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
 
                     b.Property<decimal>("ValorBase")
                         .HasColumnType("decimal(18,2)");

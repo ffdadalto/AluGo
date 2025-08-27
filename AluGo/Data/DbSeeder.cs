@@ -63,7 +63,7 @@ public static class DbSeeder
 
         db.Recebimentos.Add(rec);
 
-        p1.Status = StatusParcela.Quitada;
+        p1.Status = StatusParcela.spQuitada;
 
         p1.QuitadaEm = p1.DataVencimento;
 

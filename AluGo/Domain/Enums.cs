@@ -5,30 +5,30 @@ namespace AluGo.Domain
     public enum StatusParcela
     {
         [Description("Aberta")]
-        Aberta = 'A',
+        spAberta = 'A',
         [Description("Parcial")]
-        Parcial = 'P',
+        spParcial = 'P',
         [Description("Quitada")]
-        Quitada = 'Q',
+        spQuitada = 'Q',
         [Description("Cancelada")]
-        Cancelada = 'C',
+        spCancelada = 'C',
         [Description("")]
-        Null = '0'
+        spNull = '0'
     }
 
     public enum TipoImovel
     {
         [Description("Casa")]
-        Casa = 'C',
+        tiCasa = 'C',
         [Description("Apartamento")]
-        Apartamento = 'A',
+        tiApartamento = 'A',
         [Description("Kitnet")]
-        Kitnet = 'K',
+        tiKitnet = 'K',
         [Description("Comercial")]
-        Comercial = 'C',
+        tiComercial = 'M',
         [Description("Outros")]
-        Outros = 'O',
+        tiOutros = 'O',
         [Description("")]
-        Null = '0'
+        tiNull = '0'
     }
 }

@@ -76,7 +76,7 @@ namespace AluGo.Controllers
                 .Include(x => x.Recebimentos)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (p is null) return NotFound();
-            if (p.Status == StatusParcela.Cancelada) return Conflict("Parcela cancelada.");
+            if (p.Status == StatusParcela.spCancelada) return Conflict("Parcela cancelada.");
 
 
             // recalcula totais considerando a data de pagamento
@@ -97,12 +97,12 @@ namespace AluGo.Controllers
             var totalPago = p.Recebimentos.Sum(r => r.ValorPago) + dto.ValorPago;
             if (totalPago + 0.01m >= p.ValorTotal) // tolerância centavos
             {
-                p.Status = StatusParcela.Quitada;
+                p.Status = StatusParcela.spQuitada;
                 p.QuitadaEm = dto.DataPagamento;
             }
             else
             {
-                p.Status = StatusParcela.Parcial;
+                p.Status = StatusParcela.spParcial;
             }
 
 
@@ -120,7 +120,7 @@ namespace AluGo.Controllers
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (p is null) return NotFound();
-            if (p.Status != StatusParcela.Quitada) 
+            if (p.Status != StatusParcela.spQuitada) 
                 return Conflict("Somente parcelas quitadas geram recibo.");
 
             var pdf = ReciboPdf.Gerar(p);
