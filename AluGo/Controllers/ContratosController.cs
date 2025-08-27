@@ -15,15 +15,12 @@ namespace AluGo.Controllers
         public ContratosController(AluGoDbContext db) => _db = db;
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<object>>> Get([FromQuery] bool? ativo, [FromQuery] Guid? imovelId, [FromQuery] Guid? locatarioId)
+        public async Task<ActionResult<IEnumerable<object>>> Get([FromQuery] Guid? imovelId, [FromQuery] Guid? locatarioId)
         {
             var q = _db.Contratos
                         .Include(c => c.Imovel)
                         .Include(c => c.Locatario)
                         .AsQueryable();
-
-            if (ativo.HasValue)
-                q = q.Where(c => c.Ativo == ativo);
 
             if (imovelId.HasValue)
                 q = q.Where(c => c.ImovelId == imovelId);
