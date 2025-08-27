@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AluGo.Migrations
 {
     [DbContext(typeof(AluGoDbContext))]
-    [Migration("20250826001436_Inicial")]
+    [Migration("20250827011931_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -65,7 +65,6 @@ namespace AluGo.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ReajusteIndice")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte>("ReajustePeriodicidadeMeses")
@@ -93,25 +92,27 @@ namespace AluGo.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Apelido")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Ativo")
                         .HasColumnType("bit");
 
                     b.Property<string>("Cidade")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CriadoEm")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Endereco")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<char>("Tipo")
+                        .ValueGeneratedOnAdd()
+                        .IsUnicode(false)
+                        .HasColumnType("char(1)")
+                        .HasDefaultValue('0');
+
                     b.Property<string>("UF")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -126,7 +127,6 @@ namespace AluGo.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CPF")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CriadoEm")
@@ -139,11 +139,9 @@ namespace AluGo.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nome")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RG")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Telefone")
@@ -161,7 +159,6 @@ namespace AluGo.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Competencia")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<Guid>("ContratoId")
@@ -200,7 +197,8 @@ namespace AluGo.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ContratoId", "Competencia")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[Competencia] IS NOT NULL");
 
                     b.ToTable("Parcelas");
                 });
@@ -246,7 +244,6 @@ namespace AluGo.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("MeioPagamento")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Observacao")
@@ -272,7 +269,6 @@ namespace AluGo.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CaminhoArquivo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("GeradoEm")

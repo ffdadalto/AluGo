@@ -16,10 +16,11 @@ namespace AluGo.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Apelido = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Endereco = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Cidade = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UF = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Apelido = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Endereco = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Cidade = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UF = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Tipo = table.Column<string>(type: "char(1)", unicode: false, nullable: false, defaultValue: "0"),
                     Ativo = table.Column<bool>(type: "bit", nullable: false),
                     CriadoEm = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -33,9 +34,9 @@ namespace AluGo.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CPF = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RG = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CPF = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RG = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Telefone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Endereco = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -60,7 +61,7 @@ namespace AluGo.Migrations
                     DescontoAteVencimento = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     MultaPercentual = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     JurosAoDiaPercentual = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ReajusteIndice = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ReajusteIndice = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ReajustePeriodicidadeMeses = table.Column<byte>(type: "tinyint", nullable: false),
                     ReajusteUltimaData = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Observacoes = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -90,7 +91,7 @@ namespace AluGo.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ContratoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Competencia = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Competencia = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     DataVencimento = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ValorBase = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     ValorDesconto = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -144,7 +145,7 @@ namespace AluGo.Migrations
                     DataPagamento = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ValorPago = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Observacao = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MeioPagamento = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MeioPagamento = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CriadoEm = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -165,7 +166,7 @@ namespace AluGo.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ParcelaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Numero = table.Column<int>(type: "int", nullable: false),
-                    CaminhoArquivo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CaminhoArquivo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     GeradoEm = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -193,7 +194,8 @@ namespace AluGo.Migrations
                 name: "IX_Parcelas_ContratoId_Competencia",
                 table: "Parcelas",
                 columns: new[] { "ContratoId", "Competencia" },
-                unique: true);
+                unique: true,
+                filter: "[Competencia] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reajustes_ContratoId",

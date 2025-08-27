@@ -1,6 +1,7 @@
 ﻿using AluGo.Domain;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Contracts;
+using System.Reflection.Emit;
 
 namespace AluGo.Data
 {
@@ -20,6 +21,9 @@ namespace AluGo.Data
 
         protected override void OnModelCreating(ModelBuilder mb)
         {
+            mb.ApplyConfiguration(new ImovelConfiguration());
+            mb.ApplyConfiguration(new ParcelaConfiguration());
+
             mb.Entity<Parcela>()
             .HasIndex(p => new { p.ContratoId, p.Competencia }).IsUnique();
 
