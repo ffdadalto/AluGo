@@ -9,7 +9,7 @@ namespace AluGo.Data.Configurations
         public void Configure(EntityTypeBuilder<Locatario> builder)
         {
             builder
-                .Property(i => i.TipoPessoa)
+                .Property(i => i.Tipo)
                 .HasConversion(p => (char)p, p => (TipoPessoa)p);
         }
     }

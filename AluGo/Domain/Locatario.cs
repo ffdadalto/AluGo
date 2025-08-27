@@ -8,7 +8,7 @@ namespace AluGo.Domain
         public string Nome { get; set; } = string.Empty;
         public string CPF { get; set; } = string.Empty; 
         public string RG { get; set; } = string.Empty; 
-        public TipoPessoa TipoPessoa { get; set; } = TipoPessoa.tpFisica;
+        public TipoPessoa Tipo { get; set; } = TipoPessoa.tpFisica;
         public string Email { get; set; }
         public string Telefone { get; set; }
         public string Endereco { get; set; }

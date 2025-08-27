@@ -60,7 +60,6 @@ namespace AluGo.ModelViews
                 Tipo = model.Tipo,
                 Ativo = model.Ativo,
                 CriadoEm = model.CriadoEm
-
             };
         }
     }
