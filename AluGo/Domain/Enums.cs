@@ -31,4 +31,14 @@ namespace AluGo.Domain
         [Description("")]
         tiNull = '0'
     }
+
+    public enum TipoPessoa
+    {
+        [Description("F")]
+        tpFisica = 'F',
+        [Description("J")]
+        tpJuridica = 'J',
+        [Description("")]
+        tpNull = '0'
+    }
 }

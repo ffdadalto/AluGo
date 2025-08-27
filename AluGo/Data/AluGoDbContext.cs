@@ -1,7 +1,6 @@
-﻿using AluGo.Domain;
+﻿using AluGo.Data.Configurations;
+using AluGo.Domain;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics.Contracts;
-using System.Reflection.Emit;
 
 namespace AluGo.Data
 {
@@ -23,18 +22,16 @@ namespace AluGo.Data
         {
             mb.ApplyConfiguration(new ImovelConfiguration());
             mb.ApplyConfiguration(new ParcelaConfiguration());
+            mb.ApplyConfiguration(new LocatarioConfiguration());
 
             mb.Entity<Parcela>()
             .HasIndex(p => new { p.ContratoId, p.Competencia }).IsUnique();
 
-
             mb.Entity<Parcela>()
             .Property(p => p.Status).HasConversion<byte>();
 
-
             mb.Entity<Recibo>()
             .HasIndex(r => r.ParcelaId).IsUnique();
-
 
             mb.Entity<Contrato>()
             .HasOne(c => c.Imovel).WithMany(i => i.Contratos).HasForeignKey(c => c.ImovelId);

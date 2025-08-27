@@ -13,25 +13,54 @@ namespace AluGo.Controllers
         private readonly AluGoDbContext _db;
         public LocatariosController(AluGoDbContext db) => _db = db;
 
-
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Locatario>>> Get()
-        => await _db.Locatarios.OrderBy(x => x.Nome).ToListAsync();
+        public async Task<ActionResult<IEnumerable<LocatarioDto>>> Get()
+        {
+            var lista = await _db.Locatarios.OrderBy(x => x.Nome).ToListAsync();
+            return Ok(lista.Select(i => new LocatarioDto
+            {
+                Id = i.Id,
+                Nome = i.Nome,
+                CPF = i.CPF,
+                RG = i.RG,
+                TipoPessoa = i.TipoPessoa,
+                Email = i.Email,
+                Telefone = i.Telefone,
+                Endereco = i.Endereco
+            }));  
+        }
 
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<Locatario>> GetById(Guid id)
-        => await _db.Locatarios.FindAsync(id) is { } l ? Ok(l) : NotFound();
+        public async Task<ActionResult<LocatarioDto>> GetById(Guid id)
+        {
+            var l = await _db.Locatarios.FindAsync(id);
+            return l is null ? NotFound() : new LocatarioDto
+            {
+                Id = l.Id,
+                Nome = l.Nome,
+                CPF = l.CPF,
+                RG = l.RG,
+                TipoPessoa = l.TipoPessoa,
+                Email = l.Email,
+                Telefone = l.Telefone,
+                Endereco = l.Endereco
+            };
+        }
 
 
         [HttpPost]
-        public async Task<ActionResult<Locatario>> Create(LocatarioCreateDto dto)
+        public async Task<ActionResult<Locatario>> Create(LocatarioDto dto)
         {
-            var l = new Locatario { 
-                Nome = dto.Nome, CPF = dto.CPF, 
-                Email = dto.Email, 
-                Telefone = dto.Telefone, 
-                Endereco = dto.Endereco 
+            var l = new Locatario
+            {
+                Nome = dto.Nome,
+                CPF = dto.CPF,
+                RG = dto.RG,
+                TipoPessoa = dto.TipoPessoa,
+                Email = dto.Email,
+                Telefone = dto.Telefone,
+                Endereco = dto.Endereco
             };
 
             _db.Locatarios.Add(l);
@@ -41,11 +70,11 @@ namespace AluGo.Controllers
 
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Update(Guid id, LocatarioUpdateDto dto)
+        public async Task<IActionResult> Update(Guid id, LocatarioDto dto)
         {
             var l = await _db.Locatarios.FindAsync(id);
             if (l is null) return NotFound();
-            (l.Nome, l.CPF, l.Email, l.Telefone, l.Endereco) = (dto.Nome, dto.CPF, dto.Email, dto.Telefone, dto.Endereco);
+            (l.Nome, l.CPF, l.RG, l.TipoPessoa, l.Email, l.Telefone, l.Endereco) = (dto.Nome, dto.CPF, dto.RG, dto.TipoPessoa, dto.Email, dto.Telefone, dto.Endereco);
             await _db.SaveChangesAsync();
             return NoContent();
         }

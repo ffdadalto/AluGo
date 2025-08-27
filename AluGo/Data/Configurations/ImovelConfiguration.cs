@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace AluGo.Data
+namespace AluGo.Data.Configurations
 {
     public class ImovelConfiguration: IEntityTypeConfiguration<Imovel>
     {
@@ -10,7 +10,7 @@ namespace AluGo.Data
         {
             builder
                 .Property(i => i.Tipo)
-                .HasConversion(p => (char)p, p => (TipoImovel)(char)p);
+                .HasConversion(p => (char)p, p => (TipoImovel)p);
         }
     }
 }

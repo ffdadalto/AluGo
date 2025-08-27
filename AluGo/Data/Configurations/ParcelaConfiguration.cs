@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace AluGo.Data
+namespace AluGo.Data.Configurations
 {
     public class ParcelaConfiguration: IEntityTypeConfiguration<Parcela>
     {
@@ -11,7 +11,7 @@ namespace AluGo.Data
         {
             builder
                 .Property(i => i.Status)
-                .HasConversion(p => (char)p, p => (StatusParcela)(char)p);
+                .HasConversion(p => (char)p, p => (StatusParcela)p);
         }
     }
 }
