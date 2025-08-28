@@ -1,6 +1,5 @@
 ﻿using AluGo.Data;
 using AluGo.Domain;
-using AluGo.Dtos;
 using AluGo.ModelViews;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,28 +24,32 @@ namespace AluGo.Controllers
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<VLocatario>> GetById(Guid id)
         {
-            var l = await _db.Locatarios.FindAsync(id);
-            return l is null ? NotFound() : VLocatario.FromModel(l);
+            var locatario = await _db.Locatarios.FindAsync(id);
+            return locatario is null ? NotFound() : VLocatario.FromModel(locatario);
         }
 
 
         [HttpPost]
         public async Task<ActionResult<Locatario>> Create(VLocatario view)
         {
-            var l = view.ToModel(_db);
+            var locatario = view.ToModel(_db);
 
-            _db.Locatarios.Add(l);
+            _db.Locatarios.Add(locatario);
             await _db.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = l.Id }, l);
+            return CreatedAtAction(nameof(GetById), new { id = locatario.Id }, locatario);
         }
 
 
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> Update(Guid id, VLocatario view)
         {
-            var l = await _db.Locatarios.FindAsync(id);
-            if (l is null) return NotFound();
-            l = view.ToModel(_db);
+            var locatario = await _db.Locatarios.FindAsync(id);
+
+            if (locatario is null) 
+                return NotFound();
+
+            locatario = view.ToModel(_db);
+
             await _db.SaveChangesAsync();
             return NoContent();
         }
@@ -55,11 +58,19 @@ namespace AluGo.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var existeContrato = await _db.Contratos.AnyAsync(c => c.LocatarioId == id && c.Ativo);
-            if (existeContrato) return Conflict("Locatário possui contratos ativos.");
-            var l = await _db.Locatarios.FindAsync(id);
-            if (l is null) return NotFound();
-            _db.Locatarios.Remove(l);
+            var existeContrato = await _db.Contratos
+                                    .AnyAsync(c => c.LocatarioId == id && c.Ativo);
+
+            if (existeContrato) 
+                return Conflict("Locatário possui contratos ativos.");
+
+            var locatario = await _db.Locatarios.FindAsync(id);
+
+            if (locatario is null) 
+                return NotFound();
+
+            locatario.Ativo = false;
+
             await _db.SaveChangesAsync();
             return NoContent();
         }

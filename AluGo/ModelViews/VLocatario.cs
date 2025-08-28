@@ -7,23 +7,28 @@ namespace AluGo.ModelViews
 {
     public class VLocatario
     {
-        public Guid Id { get; set; } 
+        public Guid Id { get; set; }
 
-        public string Nome { get; set; } 
+        [Required(ErrorMessage = "O campo 'Nome' é necessário.")]
+        public string Nome { get; set; }
 
-        public string CPF { get; set; } 
+        [Required(ErrorMessage = "O campo 'CPF' é necessário.")]
+        public string CPF { get; set; }
 
+        [Required(ErrorMessage = "O campo 'RG' é necessário.")]
         public string RG { get; set; }
 
         [EnumValidation(ErrorMessage = "O campo 'Tipo' é necessário.")]
-        public TipoPessoa Tipo { get; set; } 
+        public TipoPessoa Tipo { get; set; }
 
+        [Required(ErrorMessage = "O campo 'Email' é necessário.")]
         public string Email { get; set; }
 
+        [Required(ErrorMessage = "O campo 'Telefone' é necessário.")]
         public string Telefone { get; set; }
 
+        [Required(ErrorMessage = "O campo 'Endereço' é necessário.")]
         public string Endereco { get; set; }
-
 
         [Required(ErrorMessage = "O campo 'Ativo' é necessário.")]
         public bool Ativo { get; set; }
@@ -42,6 +47,7 @@ namespace AluGo.ModelViews
             model.Email = this.Email;
             model.Telefone = this.Telefone;
             model.Endereco = this.Endereco;
+            model.Ativo = this.Ativo;
             model.CriadoEm = this.CriadoEm;           
 
             return model;
@@ -59,6 +65,7 @@ namespace AluGo.ModelViews
                 Email = model.Email,
                 Telefone = model.Telefone,
                 Endereco = model.Endereco,
+                Ativo = model.Ativo,
                 CriadoEm = model.CriadoEm
             };
         }
