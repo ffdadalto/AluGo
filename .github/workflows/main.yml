@@ -1,36 +1,50 @@
-name: Deploy Node App via FTP
+name: Deploy .NET API to IIS
 
 on:
-    push:
-        branches:
-            - master
+  push:
+    branches:
+      - master
 
 jobs:
-    deploy:
-        name: Deploy to FTP
-        runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout Repository
-              uses: actions/checkout@v4
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4    
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: "22"
+    - name: Publish .NET Application
+      run: dotnet publish AluGo.sln --configuration Release --output ./Alugo
 
-            - name: Install Dependencies
-              run: npm install
+    - name: Stop Nginx
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.WIN_HOST }}         
+        username: ${{ secrets.WIN_USERNAME }}
+        password: ${{ secrets.WIN_PASSWORD }}                     
+        port: ${{ secrets.WIN_PORT }}
+        script: |          
+          systemctl stop nginx          
 
-            - name: Build Application
-              run: npm run build
+    - name: Copy artifacts to Nginx
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.WIN_HOST }}         
+        username: ${{ secrets.WIN_USERNAME }}
+        password: ${{ secrets.WIN_PASSWORD }}                     
+        port: ${{ secrets.WIN_PORT }}       
+        source: "./Alugo/*"
+        target: "/var/www/Alugo" 
+        strip_components: 1
 
-            - name: Deploy via FTP
-              uses: SamKirkland/FTP-Deploy-Action@4.3.0
-              with:
-                  server: ${{ secrets.WIN_HOST }}
-                  username: ${{ secrets.WIN_USERNAME }}
-                  password: ${{ secrets.WIN_PASSWORD }}
-                  local-dir: dist/
-                  server-dir: /AlugoAPI/
-                  port: ${{ secrets.WIN_PORT }}
+    - name: Start Nginx and Restart API Service
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.WIN_HOST }}         
+        username: ${{ secrets.WIN_USERNAME }}
+        password: ${{ secrets.WIN_PASSWORD }}                     
+        port: ${{ secrets.WIN_PORT }}  
+        script: |          
+          systemctl start nginx && systemctl restart api.service   
+
+            
