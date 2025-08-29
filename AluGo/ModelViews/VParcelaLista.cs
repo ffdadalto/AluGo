@@ -15,5 +15,7 @@ namespace AluGo.ModelViews
         public StatusParcela Status { get; set; }
         public DateTime? QuitadaEm { get; set; }
         public decimal ValorTotalPago { get; set; }
+        public decimal ValorAPagar => ValorTotal - ValorTotalPago;
+        public bool Quitada { get; set; }
     }
 }

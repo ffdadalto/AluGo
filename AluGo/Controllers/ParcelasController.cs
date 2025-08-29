@@ -124,7 +124,9 @@ namespace AluGo.Controllers
                 ValorTotal = i.ValorTotal,
                 Status = i.Status,
                 QuitadaEm = i.QuitadaEm,
-                ValorTotalPago = i.Recebimentos.Sum(r => r.ValorPago)
+                ValorTotalPago = i.Recebimentos.Sum(r => r.ValorPago),
+                Quitada = i.Status == StatusParcela.spQuitada
+
             }).ToList();
 
             return Ok(lista);
