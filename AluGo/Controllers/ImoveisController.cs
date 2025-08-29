@@ -1,6 +1,4 @@
 ﻿using AluGo.Data;
-using AluGo.Domain;
-using AluGo.Dtos;
 using AluGo.ModelViews;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
