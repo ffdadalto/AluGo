@@ -32,5 +32,5 @@ jobs:
                   username: ${{ secrets.WIN_USERNAME }}
                   password: ${{ secrets.WIN_PASSWORD }}
                   local-dir: dist/
-                  server-dir: /Alugo/
+                  server-dir: /AlugoAPI/
                   port: ${{ secrets.WIN_PORT }}
