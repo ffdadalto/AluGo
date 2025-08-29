@@ -1,6 +1,6 @@
 ﻿using AluGo.Data;
 using AluGo.Domain;
-using AluGo.Dtos;
+using AluGo.ModelViews;
 using AluGo.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,34 +15,10 @@ namespace AluGo.Controllers
         public ContratosController(AluGoDbContext db) => _db = db;
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<object>>> Get([FromQuery] Guid? imovelId, [FromQuery] Guid? locatarioId)
+        public async Task<ActionResult<IEnumerable<VContrato>>> Get()
         {
-            var q = _db.Contratos
-                        .Include(c => c.Imovel)
-                        .Include(c => c.Locatario)
-                        .AsQueryable();
-
-            if (imovelId.HasValue)
-                q = q.Where(c => c.ImovelId == imovelId);
-
-            if (locatarioId.HasValue)
-                q = q.Where(c => c.LocatarioId == locatarioId);
-
-            var list = await q
-                        .OrderByDescending(c => c.CriadoEm)
-                        .Select(c => new
-                        {
-                            c.Id,
-                            c.DataInicio,
-                            c.DataFim,
-                            c.DiaVencimento,
-                            c.ValorAluguel,
-                            c.Ativo,
-                            Imovel = c.Imovel.Apelido,
-                            Locatario = c.Locatario.Nome
-                        }).ToListAsync();
-
-            return Ok(list);
+            var lista = await _db.Contratos.ToListAsync();
+            return Ok(lista.Select(i => VContrato.FromModel(i)));
         }
 
 
@@ -60,32 +36,17 @@ namespace AluGo.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<Contrato>> Create(ContratoCreateDto dto)
+        public async Task<ActionResult<Contrato>> Create(VContrato view)
         {
-            var imovel = await _db.Imoveis.FindAsync(dto.ImovelId);
-            var locatario = await _db.Locatarios.FindAsync(dto.LocatarioId);
+            var imovel = await _db.Imoveis.FindAsync(view.ImovelId);
+            var locatario = await _db.Locatarios.FindAsync(view.LocatarioId);
 
             if (imovel is null || locatario is null) 
                 return BadRequest("Imóvel/Locatário inválido.");
 
-            var c = new Contrato
-            {
-                ImovelId = dto.ImovelId,
-                LocatarioId = dto.LocatarioId,
-                DataInicio = dto.DataInicio.Date,
-                DataFim = dto.DataFim?.Date,
-                DiaVencimento = dto.DiaVencimento,
-                ValorAluguel = dto.ValorAluguel,
-                DescontoAteVencimento = dto.DescontoAteVencimento,
-                MultaPercentual = dto.MultaPercentual,
-                JurosAoDiaPercentual = dto.JurosAoDiaPercentual,
-                ReajusteIndice = dto.ReajusteIndice,
-                ReajustePeriodicidadeMeses = dto.ReajustePeriodicidadeMeses,
-                Observacoes = dto.Observacoes,
-                Ativo = true
-            };
+            var c = view.ToModel(_db);
 
-            var parcelas = FabricaParcelas.GerarParaContrato(c, Math.Max(1, dto.MesesGerar)).ToList();
+            var parcelas = FabricaParcelas.GerarParaContrato(c, Math.Max(1, view.MesesGerar)).ToList();
             c.Parcelas = parcelas;
 
             _db.Contratos.Add(c);
@@ -93,6 +54,21 @@ namespace AluGo.Controllers
             await _db.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetById), new { id = c.Id }, c);
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var i = await _db.Contratos.FindAsync(id);
+            if (i is null) return NotFound();
+
+            var parcelas = i.Parcelas;
+
+            _db.RemoveRange(parcelas);
+
+            _db.Remove(i);
+            await _db.SaveChangesAsync();
+            return NoContent();
         }
     }
 }

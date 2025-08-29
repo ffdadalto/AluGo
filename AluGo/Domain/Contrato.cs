@@ -7,8 +7,7 @@
         public Imovel Imovel { get; set; } = default!;
         public Guid LocatarioId { get; set; }
         public Locatario Locatario { get; set; } = default!;
-
-
+        public int Numero { get; set; }
         public DateTime DataInicio { get; set; }
         public DateTime? DataFim { get; set; }
         public byte DiaVencimento { get; set; } = 5;
@@ -19,7 +18,7 @@
         public string ReajusteIndice { get; set; } = "IPCA";
         public byte ReajustePeriodicidadeMeses { get; set; } = 12;
         public DateTime? ReajusteUltimaData { get; set; }
-        public string? Observacoes { get; set; }
+        public string Observacoes { get; set; }
         public bool Ativo { get; set; } = true;
         public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
 

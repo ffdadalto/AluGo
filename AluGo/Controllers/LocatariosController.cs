@@ -1,6 +1,6 @@
 ﻿using AluGo.Data;
 using AluGo.Domain;
-using AluGo.Dtos;
+using AluGo.ModelViews;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,67 +14,42 @@ namespace AluGo.Controllers
         public LocatariosController(AluGoDbContext db) => _db = db;
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<LocatarioDto>>> Get()
+        public async Task<ActionResult<IEnumerable<VLocatario>>> Get()
         {
             var lista = await _db.Locatarios.OrderBy(x => x.Nome).ToListAsync();
-            return Ok(lista.Select(i => new LocatarioDto
-            {
-                Id = i.Id,
-                Nome = i.Nome,
-                CPF = i.CPF,
-                RG = i.RG,
-                TipoPessoa = i.TipoPessoa,
-                Email = i.Email,
-                Telefone = i.Telefone,
-                Endereco = i.Endereco
-            }));  
+            return Ok(lista.Select(i => VLocatario.FromModel(i)));
         }
 
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<LocatarioDto>> GetById(Guid id)
+        public async Task<ActionResult<VLocatario>> GetById(Guid id)
         {
-            var l = await _db.Locatarios.FindAsync(id);
-            return l is null ? NotFound() : new LocatarioDto
-            {
-                Id = l.Id,
-                Nome = l.Nome,
-                CPF = l.CPF,
-                RG = l.RG,
-                TipoPessoa = l.TipoPessoa,
-                Email = l.Email,
-                Telefone = l.Telefone,
-                Endereco = l.Endereco
-            };
+            var locatario = await _db.Locatarios.FindAsync(id);
+            return locatario is null ? NotFound() : VLocatario.FromModel(locatario);
         }
 
 
         [HttpPost]
-        public async Task<ActionResult<Locatario>> Create(LocatarioDto dto)
+        public async Task<ActionResult<Locatario>> Create(VLocatario view)
         {
-            var l = new Locatario
-            {
-                Nome = dto.Nome,
-                CPF = dto.CPF,
-                RG = dto.RG,
-                TipoPessoa = dto.TipoPessoa,
-                Email = dto.Email,
-                Telefone = dto.Telefone,
-                Endereco = dto.Endereco
-            };
+            var locatario = view.ToModel(_db);
 
-            _db.Locatarios.Add(l);
+            _db.Locatarios.Add(locatario);
             await _db.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = l.Id }, l);
+            return CreatedAtAction(nameof(GetById), new { id = locatario.Id }, locatario);
         }
 
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Update(Guid id, LocatarioDto dto)
+        public async Task<IActionResult> Update(Guid id, VLocatario view)
         {
-            var l = await _db.Locatarios.FindAsync(id);
-            if (l is null) return NotFound();
-            (l.Nome, l.CPF, l.RG, l.TipoPessoa, l.Email, l.Telefone, l.Endereco) = (dto.Nome, dto.CPF, dto.RG, dto.TipoPessoa, dto.Email, dto.Telefone, dto.Endereco);
+            var locatario = await _db.Locatarios.FindAsync(id);
+
+            if (locatario is null) 
+                return NotFound();
+
+            locatario = view.ToModel(_db);
+
             await _db.SaveChangesAsync();
             return NoContent();
         }
@@ -83,11 +58,19 @@ namespace AluGo.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var existeContrato = await _db.Contratos.AnyAsync(c => c.LocatarioId == id && c.Ativo);
-            if (existeContrato) return Conflict("Locatário possui contratos ativos.");
-            var l = await _db.Locatarios.FindAsync(id);
-            if (l is null) return NotFound();
-            _db.Locatarios.Remove(l);
+            var existeContrato = await _db.Contratos
+                                    .AnyAsync(c => c.LocatarioId == id && c.Ativo);
+
+            if (existeContrato) 
+                return Conflict("Locatário possui contratos ativos.");
+
+            var locatario = await _db.Locatarios.FindAsync(id);
+
+            if (locatario is null) 
+                return NotFound();
+
+            locatario.Ativo = false;
+
             await _db.SaveChangesAsync();
             return NoContent();
         }

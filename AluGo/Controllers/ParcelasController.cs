@@ -1,8 +1,7 @@
 ﻿using AluGo.Data;
 using AluGo.Domain;
-using AluGo.Dtos;
+using AluGo.ModelViews;
 using AluGo.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,41 +16,11 @@ namespace AluGo.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<object>>> Get([FromQuery] Guid? contratoId, [FromQuery] StatusParcela? status, [FromQuery] DateTime? vencimentoDe, [FromQuery] DateTime? vencimentoAte)
+        public async Task<ActionResult<IEnumerable<VParcela>>> Get()
         {
-            var q = _db.Parcelas
-                    .Include(p => p.Contrato).ThenInclude(c => c.Imovel)
-                    .Include(p => p.Contrato).ThenInclude(c => c.Locatario)
-                    .AsQueryable();
-
-
-            if (contratoId.HasValue)
-                q = q.Where(p => p.ContratoId == contratoId);
-            if (status.HasValue) 
-                q = q.Where(p => p.Status == status);
-            if (vencimentoDe.HasValue) 
-                q = q.Where(p => p.DataVencimento >= vencimentoDe.Value.Date);
-            if (vencimentoAte.HasValue) 
-                q = q.Where(p => p.DataVencimento < vencimentoAte.Value.Date.AddDays(1));
-
-
-            var list = await q.OrderBy(p => p.DataVencimento).Select(p => new {
-                p.Id,
-                p.Competencia,
-                p.DataVencimento,
-                p.ValorBase,
-                p.ValorDesconto,
-                p.ValorMulta,
-                p.ValorJuros,
-                p.ValorOutros,
-                p.ValorTotal,
-                p.Status,
-                Contrato = new { p.Contrato.Id, p.Contrato.Imovel.Apelido, p.Contrato.Locatario.Nome }
-            }).ToListAsync();
-
-            return Ok(list);
+            var lista = await _db.Parcelas.ToListAsync();
+            return Ok(lista.Select(i => VParcela.FromModel(i)));
         }
-
 
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<object>> GetById(Guid id)
@@ -66,48 +35,51 @@ namespace AluGo.Controllers
         }
 
 
-        [HttpPost("{id:guid}/recebimentos")]
-        public async Task<IActionResult> Receber(Guid id, RecebimentoCreateDto dto)
+        [HttpPost("recebimentos")]
+        public async Task<IActionResult> Receber(VRecebimento view)
         {
             var p = await _db.Parcelas
-                .Include(x => x.Contrato).ThenInclude(c => c.Imovel)
-                .Include(x => x.Contrato).ThenInclude(c => c.Locatario)
-                .Include(x => x.Recebimentos)
-                .Include(x => x.Recebimentos)
-                .FirstOrDefaultAsync(x => x.Id == id);
-            if (p is null) return NotFound();
-            if (p.Status == StatusParcela.spCancelada) return Conflict("Parcela cancelada.");
+                            .Include(x => x.Contrato)
+                            .Include(x => x.Recebimentos)
+                        .Where(x => x.Id == view.ParcelaId)
+                        .FirstOrDefaultAsync();            
 
+            if (p is null)
+                return NotFound();            
+
+            if (p.Status == StatusParcela.spCancelada)
+                return Conflict("Parcela cancelada.");
+
+
+            decimal totalPago = 0;
+            totalPago = p.Recebimentos.Sum(x => x.ValorPago);
 
             // recalcula totais considerando a data de pagamento
-            CalculoParcela.AtualizarTotaisParaPagamento(p, dto.DataPagamento);
-
+            CalculoParcela.AtualizarTotaisParaPagamento(p, view.DataPagamento);
 
             var rec = new Recebimento
             {
                 Parcela = p,
-                DataPagamento = dto.DataPagamento,
-                ValorPago = dto.ValorPago,
-                MeioPagamento = dto.MeioPagamento,
-                Observacao = dto.Observacao
+                DataPagamento = view.DataPagamento,
+                ValorPago = view.ValorPago,
+                MeioPagamento = view.MeioPagamento,
+                Observacao = view.Observacao
             };
+
             _db.Recebimentos.Add(rec);
 
+            var totalPagoAtual = totalPago + view.ValorPago;
 
-            var totalPago = p.Recebimentos.Sum(r => r.ValorPago) + dto.ValorPago;
-            if (totalPago + 0.01m >= p.ValorTotal) // tolerância centavos
+            if (totalPagoAtual + 0.01m >= p.ValorTotal) // tolerância centavos
             {
                 p.Status = StatusParcela.spQuitada;
-                p.QuitadaEm = dto.DataPagamento;
+                p.QuitadaEm = view.DataPagamento;
             }
             else
-            {
                 p.Status = StatusParcela.spParcial;
-            }
-
 
             await _db.SaveChangesAsync();
-            
+
             return Ok(new { p.Status, totalPago, p.ValorTotal });
         }
 
@@ -120,12 +92,45 @@ namespace AluGo.Controllers
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (p is null) return NotFound();
-            if (p.Status != StatusParcela.spQuitada) 
+            if (p.Status != StatusParcela.spQuitada)
                 return Conflict("Somente parcelas quitadas geram recibo.");
 
             var pdf = ReciboPdf.Gerar(p);
             return File(pdf, "application/pdf", $"recibo-{p.Competencia}-{p.Id}.pdf");
         }
-    }    
+
+        [HttpGet("lista")]
+        public async Task<ActionResult<IEnumerable<VParcelaLista>>> GetLista()
+        {
+            var collection = await _db.Parcelas
+                                    .OrderBy(x => x.DataVencimento)
+                                    .Include(x => x.Recebimentos)                                    
+                                    .Include(x => x.Contrato.Locatario)
+                                    .Include(x => x.Contrato.Imovel)
+                                    .ToListAsync();
+
+            if(collection is null || collection.Count == 0)
+                return NoContent();
+
+            var lista = collection.Select(i => new VParcelaLista
+            {
+                Id = i.Id,
+                ContratoId = i.ContratoId,
+                ContratoNumero = i.Contrato.Numero,
+                LocatarioNome = i.Contrato.Locatario.Nome,
+                ImovelNome = i.Contrato.Imovel.Apelido,
+                Competencia = i.Competencia,
+                DataVencimento = i.DataVencimento,
+                ValorTotal = i.ValorTotal,
+                Status = i.Status,
+                QuitadaEm = i.QuitadaEm,
+                ValorTotalPago = i.Recebimentos.Sum(r => r.ValorPago),
+                Quitada = i.Status == StatusParcela.spQuitada
+
+            }).ToList();
+
+            return Ok(lista);
+        }
+    }
 }
-    
+

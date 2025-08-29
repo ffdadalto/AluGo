@@ -16,7 +16,7 @@ namespace AluGo.Services
                 yield return new Parcela
                 {
                     Contrato = c,
-                    Competencia = $"{comp:yyyy-MM}",
+                    Competencia = $"{comp:MM-yyyy}",
                     DataVencimento = venc,
                     ValorBase = c.ValorAluguel,
                     ValorDesconto = c.DescontoAteVencimento ?? 0m,

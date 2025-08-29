@@ -4,6 +4,7 @@ using AluGo.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AluGo.Migrations
 {
     [DbContext(typeof(AluGoDbContext))]
-    partial class AluGoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250827212614_correcoes")]
+    partial class correcoes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,9 +60,6 @@ namespace AluGo.Migrations
 
                     b.Property<decimal>("MultaPercentual")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Numero")
-                        .HasColumnType("int");
 
                     b.Property<string>("Observacoes")
                         .HasColumnType("nvarchar(max)");
@@ -123,9 +123,6 @@ namespace AluGo.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Ativo")
-                        .HasColumnType("bit");
-
                     b.Property<string>("CPF")
                         .HasColumnType("nvarchar(max)");
 
@@ -147,7 +144,7 @@ namespace AluGo.Migrations
                     b.Property<string>("Telefone")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<char>("Tipo")
+                    b.Property<char>("TipoPessoa")
                         .HasColumnType("nvarchar(1)");
 
                     b.HasKey("Id");

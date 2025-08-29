@@ -21,6 +21,6 @@
 
 
         public ICollection<Recebimento> Recebimentos { get; set; } = new List<Recebimento>();
-        public Recibo? Recibo { get; set; }
+        public Recibo Recibo { get; set; }
     }
 }
