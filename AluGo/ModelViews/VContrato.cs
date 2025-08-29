@@ -8,6 +8,7 @@ namespace AluGo.ModelViews
         public Guid Id { get; set; } 
         public Guid ImovelId { get; set; }
         public Guid LocatarioId { get; set; }
+        public int Numero { get; set; }
         public DateTime DataInicio { get; set; }
         public DateTime? DataFim { get; set; }
         public byte DiaVencimento { get; set; } 
@@ -30,6 +31,7 @@ namespace AluGo.ModelViews
             
             model.ImovelId = this.ImovelId;
             model.LocatarioId = this.LocatarioId;
+            model.Numero = this.Numero;
             model.DataInicio = this.DataInicio;
             model.DataFim = this.DataFim;
             model.DiaVencimento = this.DiaVencimento;
@@ -54,6 +56,7 @@ namespace AluGo.ModelViews
                 Id = model.Id,
                 ImovelId = model.ImovelId,
                 LocatarioId = model.LocatarioId,
+                Numero = model.Numero,
                 DataInicio = model.DataInicio,
                 DataFim = model.DataFim,
                 DiaVencimento = model.DiaVencimento,

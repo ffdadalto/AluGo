@@ -7,8 +7,7 @@
         public Imovel Imovel { get; set; } = default!;
         public Guid LocatarioId { get; set; }
         public Locatario Locatario { get; set; } = default!;
-
-
+        public int Numero { get; set; }
         public DateTime DataInicio { get; set; }
         public DateTime? DataFim { get; set; }
         public byte DiaVencimento { get; set; } = 5;
