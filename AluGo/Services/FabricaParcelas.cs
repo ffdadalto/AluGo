@@ -23,7 +23,8 @@ namespace AluGo.Services
                     ValorMulta = 0m,
                     ValorJuros = 0m,
                     ValorOutros = 0m,
-                    ValorTotal = Math.Round(c.ValorAluguel - (c.DescontoAteVencimento ?? 0m), 2)
+                    ValorTotal = Math.Round(c.ValorAluguel - (c.DescontoAteVencimento ?? 0m), 2),
+                    Numero = i + 1
                 };
             }
         }

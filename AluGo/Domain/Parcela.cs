@@ -5,7 +5,7 @@
         public Guid Id { get; set; } = Guid.NewGuid();
         public Guid ContratoId { get; set; }
         public Contrato Contrato { get; set; } = default!;
-
+        public int Numero { get; set; }
 
         public string Competencia { get; set; } = string.Empty; // AAAA-MM
         public DateTime DataVencimento { get; set; }

@@ -5,6 +5,7 @@ namespace AluGo.ModelViews
     public class VParcelaLista
     {
         public Guid Id { get; set; }
+        public int Numero { get; set; }
         public Guid ContratoId { get; set; }
         public int ContratoNumero { get; set; }
         public string LocatarioNome { get; set; }

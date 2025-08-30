@@ -23,52 +23,98 @@ namespace AluGo.Controllers
 
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<Contrato>> GetById(Guid id)
+        public async Task<ActionResult<VContrato>> GetById(Guid id)
         {
-            var c = await _db.Contratos
-                            .Include(x => x.Imovel)
-                            .Include(x => x.Locatario)
-                            .Include(x => x.Parcelas)
-                            .FirstOrDefaultAsync(x => x.Id == id);
-
-            return c is null ? NotFound() : Ok(c);
+            var c = await _db.Contratos.FirstOrDefaultAsync(x => x.Id == id);
+            return c is null ? NotFound() : Ok(VContrato.FromModel(c));
         }
 
 
         [HttpPost]
-        public async Task<ActionResult<Contrato>> Create(VContrato view)
-        {
-            var imovel = await _db.Imoveis.FindAsync(view.ImovelId);
-            var locatario = await _db.Locatarios.FindAsync(view.LocatarioId);
+        public async Task<ActionResult<VContrato>> Create(VContrato view) 
+        { 
+            var numUltimoContrato = await _db.Contratos
+                                        .OrderByDescending(c => c.Numero)
+                                        .Select(c => c.Numero)
+                                        .FirstOrDefaultAsync();
+            view.Numero = numUltimoContrato + 1;
+            var contrato = view.ToModel(_db);
+            _db.Contratos.Add(contrato);
+            await _db.SaveChangesAsync();
 
-            if (imovel is null || locatario is null) 
-                return BadRequest("Imóvel/Locatário inválido.");
-
-            var c = view.ToModel(_db);
-
-            var parcelas = FabricaParcelas.GerarParaContrato(c, Math.Max(1, view.MesesGerar)).ToList();
-            c.Parcelas = parcelas;
-
-            _db.Contratos.Add(c);
+            var parcelas = FabricaParcelas.GerarParaContrato(contrato, Math.Max(1, view.MesesGerar)).ToList();
+            _db.Parcelas.AddRange(parcelas);
 
             await _db.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetById), new { id = c.Id }, c);
+            return Ok(contrato);
+        }
+
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> Update(Guid id, VContrato view)
+        {
+            var contrato = await _db.Contratos.FindAsync(id);
+
+            if (contrato is null)
+                return NotFound();
+
+            contrato = view.ToModel(_db);
+
+            await _db.SaveChangesAsync();
+            return NoContent();
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var i = await _db.Contratos.FindAsync(id);
-            if (i is null) return NotFound();
+            var contrato = await _db.Contratos
+                            .Include(c => c.Parcelas)
+                                .ThenInclude(p => p.Recebimentos)
+                            .FirstOrDefaultAsync(c => c.Id == id);
 
-            var parcelas = i.Parcelas;
+            if (contrato is null) return NotFound();
+
+            var parcelas = contrato.Parcelas;
+            var recebimentos = parcelas.SelectMany(p => p.Recebimentos);
 
             _db.RemoveRange(parcelas);
+            _db.RemoveRange(recebimentos);
 
-            _db.Remove(i);
+            _db.Remove(contrato);
             await _db.SaveChangesAsync();
             return NoContent();
+        }
+
+        [HttpGet("lista")]
+        public async Task<ActionResult<IEnumerable<VContratoLista>>> GetLista()
+        {
+            var collection = await _db.Contratos
+                                    .OrderByDescending(x => x.Numero)
+                                    .Include(x => x.Imovel)
+                                    .Include(x => x.Locatario)
+                                    .Include(x => x.Parcelas)
+                                    .ToListAsync();
+
+            if (collection is null || collection.Count == 0)
+                return NoContent();
+
+            var lista = collection.Select(i => new VContratoLista
+            {
+                Id = i.Id,
+                ImovelId = i.ImovelId,
+                ImovelNome = i.Imovel?.Apelido ?? "",
+                LocatarioId = i.LocatarioId,
+                LocatarioNome = i.Locatario?.Nome ?? "",
+                Numero = i.Numero,
+                DataInicio = i.DataInicio,
+                DataFim = i.DataFim,
+                ValorAluguel = i.ValorAluguel,
+                Ativo = i.Ativo,
+                ValorContrato = i.Parcelas.Sum(p => p.ValorTotal)
+
+            }).ToList();
+
+            return Ok(lista);
         }
     }
 }

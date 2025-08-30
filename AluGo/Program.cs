@@ -1,5 +1,6 @@
 using AluGo.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using QuestPDF.Infrastructure;
 using System.Text.Json.Serialization;
 
@@ -20,6 +21,8 @@ namespace AluGo
             {
                 var c = o.JsonSerializerOptions.Converters.FirstOrDefault(conv => conv is JsonStringEnumConverter);
                 if (c != null) o.JsonSerializerOptions.Converters.Remove(c);
+
+                o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             });
 
             builder.Services.AddCors(options =>

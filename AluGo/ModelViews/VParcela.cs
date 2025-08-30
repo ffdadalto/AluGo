@@ -7,6 +7,7 @@ namespace AluGo.ModelViews
     {
         public Guid Id { get; set; } 
         public Guid ContratoId { get; set; }
+        public int Numero { get; set; }
         public string Competencia { get; set; } 
         public DateTime DataVencimento { get; set; }
         public decimal ValorBase { get; set; }
