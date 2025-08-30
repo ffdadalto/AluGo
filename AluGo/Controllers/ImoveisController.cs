@@ -55,7 +55,8 @@ namespace AluGo.Controllers
             var i = await _db.Imoveis.FindAsync(id);
             if (i is null) return NotFound();
 
-            _db.Remove(i);
+            i.Ativo = false;
+
             await _db.SaveChangesAsync();
             return NoContent();
         }
