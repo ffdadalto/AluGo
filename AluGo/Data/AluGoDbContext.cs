@@ -1,10 +1,11 @@
 ﻿using AluGo.Data.Configurations;
 using AluGo.Domain;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace AluGo.Data
 {
-    public class AluGoDbContext: DbContext
+    public class AluGoDbContext : DbContext
     {
         public DbSet<Imovel> Imoveis => Set<Imovel>();
         public DbSet<Locatario> Locatarios => Set<Locatario>();
@@ -13,6 +14,7 @@ namespace AluGo.Data
         public DbSet<Recebimento> Recebimentos => Set<Recebimento>();
         public DbSet<Recibo> Recibos => Set<Recibo>();
         public DbSet<Reajuste> Reajustes => Set<Reajuste>();
+        public DbSet<Pessoa> Pessoas => Set<Pessoa>();
 
 
         public AluGoDbContext(DbContextOptions<AluGoDbContext> options) : base(options) { }
@@ -38,6 +40,12 @@ namespace AluGo.Data
             mb.Entity<Contrato>()
             .HasOne(c => c.Locatario).WithMany(l => l.Contratos).HasForeignKey(c => c.LocatarioId);
 
+            mb.Entity<Pessoa>().HasData(
+            new Pessoa
+            {                
+                Email = "ffdadalto@gmail.com ",
+                Senha = "F1365188F9DE24F7594F6A0F501E3A10"
+            });
 
             base.OnModelCreating(mb);
         }

@@ -1,8 +1,11 @@
+using AluGo.Classes;
 using AluGo.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using QuestPDF.Infrastructure;
+using System.Text;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AluGo
 {
@@ -25,6 +28,25 @@ namespace AluGo
                 o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             });
 
+            var key = Encoding.ASCII.GetBytes(Settings.Secret);
+            builder.Services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+
+                };
+            });
+
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll", builder =>
@@ -35,12 +57,12 @@ namespace AluGo
 
             app.UseCors("AllowAll");
 
+            // Aplica as migrations pendentes ao iniciar a aplicação
             using (var scope = app.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<AluGoDbContext>();
                 await db.Database.MigrateAsync();
-            }
-            ;
+            }            
 
             app.UseHttpsRedirection();
 

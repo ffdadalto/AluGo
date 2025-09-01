@@ -1,5 +1,6 @@
 ﻿using AluGo.Data;
 using AluGo.ModelViews;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,7 @@ namespace AluGo.Controllers
         public ImoveisController(AluGoDbContext db) => _db = db;
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<VImovel>>> Get()
         {
             var lista = await _db.Imoveis.OrderBy(x => x.Apelido).ToListAsync();
@@ -20,6 +22,7 @@ namespace AluGo.Controllers
         }
 
         [HttpGet("{id:guid}")]
+        [Authorize]
         public async Task<ActionResult<VImovel>> GetById(Guid id)
         {
             var imovel = await _db.Imoveis.FindAsync(id);
@@ -28,6 +31,7 @@ namespace AluGo.Controllers
 
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<VImovel>> Create(VImovel view)
         {
             var i = view.ToModel(_db);
@@ -37,8 +41,8 @@ namespace AluGo.Controllers
             return CreatedAtAction(nameof(GetById), new { id = i.Id }, i);
         }
 
-
         [HttpPut("{id:guid}")]
+        [Authorize]
         public async Task<IActionResult> Update(Guid id, VImovel view)
         {
             var i = await _db.Imoveis.FindAsync(id);
@@ -48,8 +52,8 @@ namespace AluGo.Controllers
             return NoContent();
         }
 
-
         [HttpDelete("{id:guid}")]
+        [Authorize]
         public async Task<IActionResult> Delete(Guid id)
         {
             var i = await _db.Imoveis.FindAsync(id);

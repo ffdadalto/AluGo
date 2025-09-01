@@ -4,6 +4,7 @@ using AluGo.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AluGo.Migrations
 {
     [DbContext(typeof(AluGoDbContext))]
-    partial class AluGoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250901015326_Pessoa")]
+    partial class Pessoa
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -224,6 +227,9 @@ namespace AluGo.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Nome")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Senha")
                         .HasColumnType("nvarchar(max)");
 
@@ -234,10 +240,11 @@ namespace AluGo.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("fa5f507f-1f3d-4d63-a421-0aa2dcedd132"),
+                            Id = new Guid("79b3727d-9861-4e4f-b888-05e4dd6f3aa3"),
                             Ativo = true,
-                            CriadoEm = new DateTime(2025, 8, 31, 22, 54, 44, 342, DateTimeKind.Local).AddTicks(8025),
+                            CriadoEm = new DateTime(2025, 8, 31, 22, 53, 25, 882, DateTimeKind.Local).AddTicks(1652),
                             Email = "ffdadalto@gmail.com ",
+                            Nome = "",
                             Senha = "F1365188F9DE24F7594F6A0F501E3A10"
                         });
                 });

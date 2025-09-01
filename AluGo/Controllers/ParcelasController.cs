@@ -2,6 +2,7 @@
 using AluGo.Domain;
 using AluGo.ModelViews;
 using AluGo.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,7 @@ namespace AluGo.Controllers
 
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<VParcela>>> Get()
         {
             var lista = await _db.Parcelas.ToListAsync();
@@ -23,6 +25,7 @@ namespace AluGo.Controllers
         }
 
         [HttpGet("{id:guid}")]
+        [Authorize]
         public async Task<ActionResult<object>> GetById(Guid id)
         {
             var p = await _db.Parcelas
@@ -34,8 +37,8 @@ namespace AluGo.Controllers
             return Ok(p);
         }
 
-
         [HttpPost("recebimentos")]
+        [Authorize]
         public async Task<IActionResult> Receber(VRecebimento view)
         {
             var p = await _db.Parcelas
@@ -84,6 +87,7 @@ namespace AluGo.Controllers
         }
 
         [HttpPost("{id:guid}/recibo")]
+        [Authorize]
         public async Task<IActionResult> GerarRecibo(Guid id)
         {
             var p = await _db.Parcelas
@@ -100,6 +104,7 @@ namespace AluGo.Controllers
         }
 
         [HttpGet("lista")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<VParcelaLista>>> GetLista()
         {
             var collection = await _db.Parcelas
