@@ -16,19 +16,19 @@ namespace AluGo.ModelViews
         [Required(ErrorMessage = "O campo 'Apelido' é necessário.")]
         public string Apelido { get; set; }
 
-        [Required(ErrorMessage = "O campo 'Apelido' é necessário.")]
+        [Required(ErrorMessage = "O campo 'Endereco' é necessário.")]
         public string Endereco { get; set; }
 
-        [Required(ErrorMessage = "O campo 'Apelido' é necessário.")]
+        [Required(ErrorMessage = "O campo 'Cidade' é necessário.")]
         public string Cidade { get; set; }
 
-        [Required(ErrorMessage = "O campo 'Apelido' é necessário.")]
+        [Required(ErrorMessage = "O campo 'UF' é necessário.")]
         public string UF { get; set; }
 
         [EnumValidation(ErrorMessage = "O campo 'Tipo' é necessário.")]
         public TipoImovel Tipo { get; set; }
 
-        [Required(ErrorMessage = "O campo 'Apelido' é necessário.")]
+        [Required(ErrorMessage = "O campo 'Ativo' é necessário.")]
         public bool Ativo { get; set; }
 
         public DateTime CriadoEm { get; set; }

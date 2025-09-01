@@ -14,8 +14,7 @@ namespace AluGo.ModelViews
 
         [Required(ErrorMessage = "O campo 'CPF' é necessário.")]
         public string CpfCnpj { get; set; }
-
-        [Required(ErrorMessage = "O campo 'RG' é necessário.")]
+        
         public string RG { get; set; }
 
         [EnumValidation(ErrorMessage = "O campo 'Tipo' é necessário.")]

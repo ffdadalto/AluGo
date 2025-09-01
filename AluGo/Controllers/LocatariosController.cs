@@ -34,6 +34,12 @@ namespace AluGo.Controllers
         [Authorize]
         public async Task<ActionResult<VLocatario>> Create(VLocatario view)
         {
+            if(view.Tipo == TipoPessoa.tpFisica && string.IsNullOrWhiteSpace(view.RG))
+                ModelState.AddModelError("RG", "O campo 'RG' obrigatório.");
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var locatario = view.ToModel(_db);
 
             _db.Locatarios.Add(locatario);
