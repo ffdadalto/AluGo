@@ -34,11 +34,11 @@ namespace AluGo.Controllers
         [Authorize]
         public async Task<ActionResult<VImovel>> Create(VImovel view)
         {
-            var i = view.ToModel(_db);
+            var imovel = view.ToModel(_db);
 
-            _db.Imoveis.Add(i);
+            _db.Imoveis.Add(imovel);
             await _db.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = i.Id }, i);
+            return Ok(imovel);
         }
 
         [HttpPut("{id:guid}")]

@@ -10,6 +10,9 @@ namespace AluGo.ModelViews
 
         public Guid Id { get; set; } = Guid.NewGuid();
 
+        [Required(ErrorMessage = "O campo 'Nome' é necessário.")]
+        public string Nome { get; set; }
+
         [Required(ErrorMessage = "O campo 'Apelido' é necessário.")]
         public string Apelido { get; set; }
 
@@ -36,6 +39,7 @@ namespace AluGo.ModelViews
             if (model == null)
                 model = new Imovel();
 
+            model.Nome = this.Nome;
             model.Apelido = this.Apelido;
             model.Endereco = this.Endereco;
             model.Cidade = this.Cidade;
@@ -53,6 +57,7 @@ namespace AluGo.ModelViews
             {
 
                 Id = model.Id,
+                Nome = model.Nome,
                 Apelido = model.Apelido,
                 Endereco = model.Endereco,
                 Cidade = model.Cidade,

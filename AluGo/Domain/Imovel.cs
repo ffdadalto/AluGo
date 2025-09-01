@@ -1,10 +1,9 @@
-﻿using System.Diagnostics.Contracts;
-
-namespace AluGo.Domain
+﻿namespace AluGo.Domain
 {
     public class Imovel
     {
         public Guid Id { get; set; } = Guid.NewGuid();
+        public string Nome { get; set; } = string.Empty;
         public string Apelido { get; set; } = string.Empty;
         public string Endereco { get; set; } = string.Empty;
         public string Cidade { get; set; } = string.Empty;
