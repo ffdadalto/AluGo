@@ -13,7 +13,7 @@ namespace AluGo.ModelViews
         public string Nome { get; set; }
 
         [Required(ErrorMessage = "O campo 'CPF' é necessário.")]
-        public string CPF { get; set; }
+        public string CpfCnpj { get; set; }
 
         [Required(ErrorMessage = "O campo 'RG' é necessário.")]
         public string RG { get; set; }
@@ -41,7 +41,7 @@ namespace AluGo.ModelViews
             model ??= new Locatario();
 
             model.Nome = this.Nome;
-            model.CPF = this.CPF;
+            model.CpfCnpj = this.CpfCnpj;
             model.RG = this.RG;
             model.Tipo = this.Tipo;
             model.Email = this.Email;
@@ -59,7 +59,7 @@ namespace AluGo.ModelViews
             {
                 Id = model.Id,
                 Nome = model.Nome,
-                CPF = model.CPF,
+                CpfCnpj = model.CpfCnpj,
                 RG = model.RG,
                 Tipo = model.Tipo,
                 Email = model.Email,

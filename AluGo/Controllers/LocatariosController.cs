@@ -32,13 +32,13 @@ namespace AluGo.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<Locatario>> Create(VLocatario view)
+        public async Task<ActionResult<VLocatario>> Create(VLocatario view)
         {
             var locatario = view.ToModel(_db);
 
             _db.Locatarios.Add(locatario);
             await _db.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = locatario.Id }, locatario);
+            return Ok(VLocatario.FromModel(locatario));
         }
 
         [HttpPut("{id:guid}")]

@@ -6,7 +6,7 @@ namespace AluGo.Domain
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public string Nome { get; set; } = string.Empty;
-        public string CPF { get; set; } = string.Empty; 
+        public string CpfCnpj { get; set; } = string.Empty; 
         public string RG { get; set; } = string.Empty; 
         public TipoPessoa Tipo { get; set; } = TipoPessoa.tpFisica;
         public string Email { get; set; } = string.Empty;
