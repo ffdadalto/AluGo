@@ -22,7 +22,7 @@ namespace AluGo.Controllers
             var model = _db.Pessoas.FirstOrDefault(p => p.Email == login.Email && p.Senha == senhaEncriptada);
 
             if (model is null)
-                return BadRequest();
+                return Unauthorized();
 
             var token = TokenService.GenerateToken(model);
 
