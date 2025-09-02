@@ -20,6 +20,7 @@
         public DateTime? ReajusteUltimaData { get; set; }
         public string Observacoes { get; set; }
         public bool Ativo { get; set; } = true;
+        public DateTime? UltimaEdicao { get; set; }
         public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
 
 

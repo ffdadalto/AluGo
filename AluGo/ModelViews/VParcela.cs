@@ -18,6 +18,7 @@ namespace AluGo.ModelViews
         public decimal ValorTotal { get; set; }
         public StatusParcela Status { get; set; }  
         public DateTime? QuitadaEm { get; set; }
+        public DateTime? UltimaEdicao { get; set; }
         public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
 
         public Parcela ToModel(AluGoDbContext db)
@@ -36,6 +37,7 @@ namespace AluGo.ModelViews
             model.ValorTotal = this.ValorTotal;
             model.Status = this.Status;
             model.QuitadaEm = this.QuitadaEm;
+            model.UltimaEdicao = this.UltimaEdicao;
             model.CriadoEm = this.CriadoEm;
 
             return model;
@@ -57,6 +59,7 @@ namespace AluGo.ModelViews
                 ValorTotal = model.ValorTotal,
                 Status = model.Status,
                 QuitadaEm = model.QuitadaEm,
+                UltimaEdicao = model.UltimaEdicao,
                 CriadoEm = model.CriadoEm
             };
         }

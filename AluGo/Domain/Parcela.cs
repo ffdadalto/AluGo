@@ -17,6 +17,7 @@
         public decimal ValorTotal { get; set; }
         public StatusParcela Status { get; set; } = StatusParcela.spAberta;
         public DateTime? QuitadaEm { get; set; }
+        public DateTime? UltimaEdicao { get; set; }
         public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
 
 

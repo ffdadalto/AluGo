@@ -45,9 +45,14 @@ namespace AluGo.Controllers
         [Authorize]
         public async Task<IActionResult> Update(Guid id, VImovel view)
         {
-            var i = await _db.Imoveis.FindAsync(id);
-            if (i is null) return NotFound();
-            i = view.ToModel(_db);
+            var imovel = await _db.Imoveis.FindAsync(id);
+            if (imovel is null) 
+                return NotFound();
+
+            view.UltimaEdicao = DateTime.Now;
+
+            imovel = view.ToModel(_db);
+
             await _db.SaveChangesAsync();
             return NoContent();
         }
@@ -56,10 +61,10 @@ namespace AluGo.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var i = await _db.Imoveis.FindAsync(id);
-            if (i is null) return NotFound();
+            var imovel = await _db.Imoveis.FindAsync(id);
+            if (imovel is null) return NotFound();
 
-            i.Ativo = false;
+            imovel.Inativar();
 
             await _db.SaveChangesAsync();
             return NoContent();

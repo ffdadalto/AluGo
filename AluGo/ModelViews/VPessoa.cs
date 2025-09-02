@@ -9,6 +9,7 @@ namespace AluGo.ModelViews
         public string Email { get; set; } 
         public string Senha { get; set; } 
         public bool Ativo { get; set; } = true;
+        public DateTime? UltimaEdicao { get; set; }
         public DateTime CriadoEm { get; set; } = DateTime.Now;
 
         public Pessoa ToModel(AluGoDbContext db)
@@ -19,6 +20,7 @@ namespace AluGo.ModelViews
             model.Email = this.Email;
             model.Senha = this.Senha;
             model.Ativo = this.Ativo;
+            model.UltimaEdicao = this.UltimaEdicao;
             model.CriadoEm = this.CriadoEm;
             return model;
         }
@@ -31,6 +33,7 @@ namespace AluGo.ModelViews
                 Email = model.Email,
                 Senha = model.Senha,
                 Ativo = model.Ativo,
+                UltimaEdicao = model.UltimaEdicao,
                 CriadoEm = model.CriadoEm
             };
         }

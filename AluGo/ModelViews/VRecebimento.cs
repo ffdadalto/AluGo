@@ -11,7 +11,8 @@ namespace AluGo.ModelViews
         public DateTime DataPagamento { get; set; }
         public decimal ValorPago { get; set; }
         public string Observacao { get; set; }
-        public string MeioPagamento { get; set; }         
+        public string MeioPagamento { get; set; }
+        public DateTime? UltimaEdicao { get; set; }
         public DateTime CriadoEm { get; set; } = DateTime.Now;
 
         public Recebimento ToModel(AluGoDbContext db)
@@ -24,6 +25,7 @@ namespace AluGo.ModelViews
             model.ValorPago = this.ValorPago;
             model.Observacao = this.Observacao;
             model.MeioPagamento = this.MeioPagamento;
+            model.UltimaEdicao = this.UltimaEdicao;
             model.CriadoEm = this.CriadoEm;
 
             return model;
@@ -39,6 +41,7 @@ namespace AluGo.ModelViews
                 ValorPago = model.ValorPago,
                 Observacao = model.Observacao,
                 MeioPagamento = model.MeioPagamento,
+                UltimaEdicao = model.UltimaEdicao,
                 CriadoEm = model.CriadoEm
             };
         }

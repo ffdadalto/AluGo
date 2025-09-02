@@ -21,7 +21,8 @@ namespace AluGo.ModelViews
         public DateTime? ReajusteUltimaData { get; set; }
         public int MesesGerar { get; set; }
         public string Observacoes { get; set; }
-        public bool Ativo { get; set; } 
+        public bool Ativo { get; set; }
+        public DateTime? UltimaEdicao { get; set; }
         public DateTime CriadoEm { get; set; } = DateTime.Now;
 
         public Contrato ToModel(AluGoDbContext db)
@@ -44,6 +45,7 @@ namespace AluGo.ModelViews
             model.ReajusteUltimaData = this.ReajusteUltimaData;
             model.Observacoes = this.Observacoes;
             model.Ativo = this.Ativo;
+            model.UltimaEdicao = this.UltimaEdicao;
             model.CriadoEm = this.CriadoEm;
 
             return model;
@@ -69,6 +71,7 @@ namespace AluGo.ModelViews
                 ReajusteUltimaData = model.ReajusteUltimaData,
                 Observacoes = model.Observacoes,
                 Ativo = model.Ativo,
+                UltimaEdicao = model.UltimaEdicao,
                 CriadoEm = model.CriadoEm
             };
         }

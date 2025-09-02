@@ -32,7 +32,9 @@ namespace AluGo.ModelViews
         [Required(ErrorMessage = "O campo 'Ativo' é necessário.")]
         public bool Ativo { get; set; }
 
-        public DateTime CriadoEm { get; set; }
+        public DateTime? UltimaEdicao { get; set; }
+
+        public DateTime CriadoEm { get; set; } = DateTime.Now;
 
         public Locatario ToModel(AluGoDbContext db)
         {
@@ -47,6 +49,7 @@ namespace AluGo.ModelViews
             model.Telefone = this.Telefone;
             model.Endereco = this.Endereco;
             model.Ativo = this.Ativo;
+            model.UltimaEdicao = this.UltimaEdicao;
             model.CriadoEm = this.CriadoEm;           
 
             return model;
@@ -65,6 +68,7 @@ namespace AluGo.ModelViews
                 Telefone = model.Telefone,
                 Endereco = model.Endereco,
                 Ativo = model.Ativo,
+                UltimaEdicao = model.UltimaEdicao,
                 CriadoEm = model.CriadoEm
             };
         }

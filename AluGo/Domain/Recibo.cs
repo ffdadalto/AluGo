@@ -9,6 +9,7 @@
 
         public int Numero { get; set; }
         public string CaminhoArquivo { get; set; } = string.Empty;
+        public DateTime? UltimaEdicao { get; set; }
         public DateTime GeradoEm { get; set; } = DateTime.UtcNow;
     }
 }

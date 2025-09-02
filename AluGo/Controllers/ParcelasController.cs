@@ -123,7 +123,7 @@ namespace AluGo.Controllers
                 ContratoId = i.ContratoId,
                 ContratoNumero = i.Contrato.Numero,
                 LocatarioNome = i.Contrato.Locatario.Nome,
-                ImovelNome = i.Contrato.Imovel.Apelido,
+                ImovelNome = i.Contrato.Imovel.Nome,
                 Competencia = i.Competencia,
                 DataVencimento = i.DataVencimento,
                 ValorTotal = i.ValorTotal,

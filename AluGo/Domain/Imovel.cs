@@ -10,9 +10,14 @@
         public string UF { get; set; } = "";
         public TipoImovel Tipo { get; set; } = TipoImovel.tiApartamento;
         public bool Ativo { get; set; } = true;
+        public DateTime? UltimaEdicao { get; set; }
         public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
-
-
         public ICollection<Contrato> Contratos { get; set; } = new List<Contrato>();
+
+        public void Inativar()
+        {
+            Ativo = false;
+            UltimaEdicao = DateTime.Now;
+        }
     }
 }

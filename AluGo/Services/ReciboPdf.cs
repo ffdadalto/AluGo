@@ -27,7 +27,7 @@ namespace AluGo.Services
                 var panelBg = Colors.Grey.Lighten4;
                 var border = Colors.Grey.Lighten1;
 
-                var quitada = p.QuitadaEm ?? DateTime.Now;
+                var quitada = p.QuitadaEm;
                 var reciboCodigo = $"{p.Competencia} - {p.DataVencimento:MM/yyyy}";
 
                 // >>> CONTROLES DE TAMANHO DA ASSINATURA (em pontos)
@@ -107,9 +107,9 @@ namespace AluGo.Services
                                             t.Span(Moeda(p.ValorTotal)).SemiBold().FontColor(primary);
                                         });
 
-                                        info.Item().Text($"Ref.: aluguel {p.Competencia} do imóvel {p.Contrato.Imovel.Apelido}.");
+                                        info.Item().Text($"Ref.: Aluguel competência {p.Competencia} do imóvel {p.Contrato.Imovel.Nome}.");
 
-                                        info.Item().Text($"Venc.: {p.DataVencimento:dd/MM/yyyy}  |  Pago em: {quitada:dd/MM/yyyy}")
+                                        info.Item().Text($"Venc.: {p.DataVencimento:dd/MM/yyyy}  |  Pago em: {quitada.Value:dd/MM/yyyy}")
                                                    .FontColor(textMuted);
                                     });
 

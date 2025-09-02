@@ -31,7 +31,8 @@ namespace AluGo.ModelViews
         [Required(ErrorMessage = "O campo 'Ativo' é necessário.")]
         public bool Ativo { get; set; }
 
-        public DateTime CriadoEm { get; set; }
+        public DateTime? UltimaEdicao { get; set; }
+        public DateTime CriadoEm { get; set; } = DateTime.Now;
 
         public Imovel ToModel(AluGoDbContext db)
         {
@@ -46,6 +47,7 @@ namespace AluGo.ModelViews
             model.UF = this.UF;
             model.Tipo = this.Tipo;
             model.Ativo = this.Ativo;
+            model.UltimaEdicao = this.UltimaEdicao;
             model.CriadoEm = this.CriadoEm;
 
             return model;
@@ -64,6 +66,7 @@ namespace AluGo.ModelViews
                 UF = model.UF,
                 Tipo = model.Tipo,
                 Ativo = model.Ativo,
+                UltimaEdicao = model.UltimaEdicao,
                 CriadoEm = model.CriadoEm
             };
         }
