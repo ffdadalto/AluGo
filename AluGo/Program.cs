@@ -1,11 +1,12 @@
 using AluGo.Classes;
 using AluGo.Data;
+using AluGo.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using QuestPDF.Infrastructure;
 using System.Text;
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 
 namespace AluGo
 {
@@ -52,6 +53,9 @@ namespace AluGo
                 options.AddPolicy("AllowAll", builder =>
                     builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
+
+            builder.Services.Configure<SmtpEmailOptions>(builder.Configuration.GetSection("Email"));
+            builder.Services.AddScoped<IEmailService, MailKitEmailService>();
 
             var app = builder.Build();
 

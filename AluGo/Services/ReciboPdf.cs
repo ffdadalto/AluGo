@@ -140,7 +140,7 @@ namespace AluGo.Services
                                                .Background(primary)
                                                .Padding(8)
                                                .AlignRight()
-                                               .Text($"TOTAL {Moeda(p.ValorTotal)}")
+                                               .Text($"TOTAL PAGO {Moeda(p.ValorTotal)}")
                                                .FontSize(12).SemiBold().FontColor(Colors.White);
                                         });
 
@@ -191,7 +191,7 @@ namespace AluGo.Services
                                     });
 
                                     // Data
-                                    card.Item().Text($"Emitido em {quitada:dd 'de' MMMM 'de' yyyy}")
+                                    card.Item().Text($"Emitido em {DateTime.Now:dd 'de' MMMM 'de' yyyy}")
                                                .FontSize(8.5f).FontColor(textMuted).AlignRight();
                                 });                            
                         });
