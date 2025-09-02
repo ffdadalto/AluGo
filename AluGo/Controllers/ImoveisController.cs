@@ -17,7 +17,7 @@ namespace AluGo.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<VImovel>>> Get()
         {
-            var lista = await _db.Imoveis.OrderBy(x => x.Apelido).ToListAsync();
+            var lista = await _db.Imoveis.OrderBy(x => x.Nome).ToListAsync();
             return Ok(lista.Select(i => VImovel.FromModel(i)));
         }
 
