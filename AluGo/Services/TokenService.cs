@@ -21,7 +21,7 @@ namespace AluGo.Services
                     new Claim("Id", pessoa.Id.ToString()),
 
                 }),
-                Expires = DateTime.UtcNow.AddHours(36),
+                Expires = DateTime.UtcNow.AddHours(12),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
