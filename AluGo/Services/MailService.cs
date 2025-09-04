@@ -7,13 +7,13 @@ namespace AluGo.Services
 {
     public class SmtpEmailOptions
     {
-        public string FromName { get; set; } = "Sua Empresa";
-        public string FromEmail { get; set; } = "no-reply@suaempresa.com";
-        public string Host { get; set; } = "smtp.seuprovedor.com";
-        public int Port { get; set; } = 587;
-        public bool UseSsl { get; set; } = true;
-        public string User { get; set; } = "usuario";
-        public string Password { get; set; } = "senha";
+        public string FromName { get; set; } = "Franchescolle";
+        public string FromEmail { get; set; } = "alugo@dadalto.dev.br";
+        public string Host { get; set; } = "mail.smtp2go.com";
+        public int Port { get; set; } = 2525;
+        public bool UseSsl { get; set; } = false;
+        public string User { get; set; } = "fdadalto";
+        public string Password { get; set; } = "kZrpQNs7eygx4Zus";
     }
 
     public class MailKitEmailService : IEmailService
