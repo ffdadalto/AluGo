@@ -1,4 +1,6 @@
-﻿namespace AluGo.Services
+﻿using System.Security.Cryptography;
+
+namespace AluGo.Services
 {
     public static class MD5Hash
     {
@@ -6,9 +8,8 @@
         {
             try
             {
-                System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create();
-                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(Senha);
-                byte[] hash = md5.ComputeHash(inputBytes);
+                byte[] inputBytes = System.Text.Encoding.UTF8.GetBytes(Senha);
+                byte[] hash = MD5.HashData(inputBytes);
                 System.Text.StringBuilder sb = new System.Text.StringBuilder();
                 for (int i = 0; i < hash.Length; i++)
                 {

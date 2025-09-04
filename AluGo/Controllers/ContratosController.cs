@@ -2,6 +2,7 @@
 using AluGo.Domain;
 using AluGo.ModelViews;
 using AluGo.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,7 @@ namespace AluGo.Controllers
         public ContratosController(AluGoDbContext db) => _db = db;
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<VContrato>>> Get()
         {
             var lista = await _db.Contratos.ToListAsync();
@@ -23,6 +25,7 @@ namespace AluGo.Controllers
 
 
         [HttpGet("{id:guid}")]
+        [Authorize]
         public async Task<ActionResult<VContrato>> GetById(Guid id)
         {
             var c = await _db.Contratos.FirstOrDefaultAsync(x => x.Id == id);
@@ -31,6 +34,7 @@ namespace AluGo.Controllers
 
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<VContrato>> Create(VContrato view) 
         { 
             var numUltimoContrato = await _db.Contratos
@@ -51,6 +55,7 @@ namespace AluGo.Controllers
         }
 
         [HttpPut("{id:guid}")]
+        [Authorize]
         public async Task<IActionResult> Update(Guid id, VContrato view)
         {
             var contrato = await _db.Contratos.FindAsync(id);
@@ -65,6 +70,7 @@ namespace AluGo.Controllers
         }
 
         [HttpDelete("{id:guid}")]
+        [Authorize]
         public async Task<IActionResult> Delete(Guid id)
         {
             var contrato = await _db.Contratos
@@ -86,6 +92,7 @@ namespace AluGo.Controllers
         }
 
         [HttpGet("lista")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<VContratoLista>>> GetLista()
         {
             var collection = await _db.Contratos
