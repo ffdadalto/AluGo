@@ -52,10 +52,10 @@ namespace AluGo.Controllers
                             .Include(x => x.Contrato)
                             .Include(x => x.Recebimentos)
                         .Where(x => x.Id == view.ParcelaId)
-                        .FirstOrDefaultAsync();            
+                        .FirstOrDefaultAsync();
 
             if (p is null)
-                return NotFound();            
+                return NotFound();
 
             if (p.Status == StatusParcela.spCancelada)
                 return Conflict("Parcela cancelada.");
@@ -95,7 +95,7 @@ namespace AluGo.Controllers
 
         [HttpPost("{id:guid}/recibo")]
         [Authorize]
-        public async Task<IActionResult> GerarRecibo(Guid id)
+        public async Task<IActionResult> GerarRecibo(Guid id, [FromQuery] bool enviaEmail)
         {
             var p = await _db.Parcelas
                 .Include(x => x.Contrato).ThenInclude(c => c.Imovel)
@@ -114,34 +114,38 @@ namespace AluGo.Controllers
             var imovel = p.Contrato?.Imovel?.Nome ?? "Imóvel";
             var competencia = p.Competencia?.ToString() ?? "competencia";
 
-            if (!string.IsNullOrWhiteSpace(destinatario))
+            if (enviaEmail)
             {
-                var assunto = $"Recibo {competencia} - {imovel}";
-                var corpoHtml = $@"
+
+                if (!string.IsNullOrWhiteSpace(destinatario))
+                {
+                    var assunto = $"Recibo {competencia} - {imovel}";
+                    var corpoHtml = $@"
                 <p>Olá, {nomeLocatario}!</p>
                 <p>Segue em anexo o seu recibo de pagamento referente ao mês de <b>{competencia}</b> ({imovel}).</p>
                 <p>Qualquer dúvida, fazer contato.</p>
                 <p>Att: Franchescolle Dadalto.</p>";
 
-                try
-                {
-                    await _email.SendAsync(
-                        to: destinatario,
-                        subject: assunto,
-                        htmlBody: corpoHtml,
-                        attachments: new[]
-                        {
+                    try
+                    {
+                        await _email.SendAsync(
+                            to: destinatario,
+                            subject: assunto,
+                            htmlBody: corpoHtml,
+                            attachments: new[]
+                            {
                         new EmailAttachment(
-                            FileName: $"recibo-{competencia}-{p.Id}.pdf",
+                            FileName: $"recibo-{competencia}.pdf",
                             Content: pdf,
                             ContentType: "application/pdf")
-                        }
-                    );
-                }
-                catch (Exception ex)
-                {
-                    // Não bloqueie a entrega do arquivo; faça log e siga com o retorno do File
-                    // Ex.: _logger.LogError(ex, "Falha ao enviar recibo por e-mail para {Dest}", destinatario);
+                            }
+                        );
+                    }
+                    catch (Exception ex)
+                    {
+                        // Não bloqueie a entrega do arquivo; faça log e siga com o retorno do File
+                        // Ex.: _logger.LogError(ex, "Falha ao enviar recibo por e-mail para {Dest}", destinatario);
+                    }
                 }
             }
 
@@ -154,12 +158,12 @@ namespace AluGo.Controllers
         {
             var collection = await _db.Parcelas
                                     .OrderBy(x => x.DataVencimento)
-                                    .Include(x => x.Recebimentos)                                    
+                                    .Include(x => x.Recebimentos)
                                     .Include(x => x.Contrato.Locatario)
                                     .Include(x => x.Contrato.Imovel)
                                     .ToListAsync();
 
-            if(collection is null || collection.Count == 0)
+            if (collection is null || collection.Count == 0)
                 return NoContent();
 
             var lista = collection.Select(i => new VParcelaLista
