@@ -184,7 +184,7 @@ namespace AluGo.Controllers
 
             }).ToList();
 
-            return Ok(lista);
+            return Ok(lista.OrderBy(x => x.DataVencimento).ThenByDescending(x => x.Id));
         }
     }
 }
